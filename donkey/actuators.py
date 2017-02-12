@@ -1,5 +1,5 @@
 # Simple car movement using the PCA9685 PWM servo/LED controller library.
-# 
+#
 # Attribution: hacked from sample code from Tony DiCola
 
 import time
@@ -28,7 +28,7 @@ class Dummy_Controller:
 
 class PCA9685_Controller:
     # Init with 60hz frequency by default, good for servos.
-    def __init__(self, channel, frequency=60):
+    def __init__(self, channel, frequency=50):
         import Adafruit_PCA9685
         # Initialise the PCA9685 using the default address (0x40).
         self.pwm = Adafruit_PCA9685.PCA9685()
@@ -37,11 +37,11 @@ class PCA9685_Controller:
         self.channel = channel
 
     def set_pulse(self, pulse):
-        self.pwm.set_pwm(self.channel, 0, pulse) 
-        
+        self.pwm.set_pwm(self.channel, 0, pulse)
+
 class PWMSteeringActuator:
     #max angle wheels can turn
-    LEFT_ANGLE = -45 
+    LEFT_ANGLE = -45
     RIGHT_ANGLE = 45
 
     def __init__(self, controller=None,
@@ -54,7 +54,7 @@ class PWMSteeringActuator:
 
     def update(self, angle):
         #map absolute angle to angle that vehicle can implement.
-        pulse = map_range(angle, 
+        pulse = map_range(angle,
                           self.LEFT_ANGLE, self.RIGHT_ANGLE,
                           self.left_pulse, self.right_pulse)
 
@@ -90,11 +90,11 @@ class PWMThrottleActuator:
         print('throttle update: %s' %throttle)
         if throttle > 0:
             pulse = map_range(throttle,
-                              0, self.MAX_THROTTLE, 
+                              0, self.MAX_THROTTLE,
                               self.zero_pulse, self.max_pulse)
         else:
             pulse = map_range(throttle,
-                              self.MIN_THROTTLE, 0, 
+                              self.MIN_THROTTLE, 0,
                               self.min_pulse, self.zero_pulse)
 
         print('pulse: %s' % pulse)
