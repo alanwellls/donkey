@@ -24,9 +24,6 @@ class BaseVehicle:
         self.pilot = pilot
         self.remote = remote
         self.odometer = odometer
-
-    def odometer_isr():
-        self.odometer_timestamps.append(time.time())
         
     def start(self):
         start_time = time.time()
@@ -37,7 +34,7 @@ class BaseVehicle:
             import RPi.GPIO as GPIO
             GPIO.setmode(GPIO.BCM)
             GPIO.setup(23, GPIO.IN)
-            GPIO.add_event_detect(23, GPIO.BOTH, callback=odometer_isr)
+            GPIO.add_event_detect(23, GPIO.BOTH, callback=self.odometer_isr)
             self.odometer_timestamps = []
             self.velocity = 0.0
             self.distance = 0.0
@@ -85,4 +82,6 @@ class BaseVehicle:
             print('\r CAR: angle: {:+04.2f}   throttle: {:+04.2f}   drive_mode: {}  lag: {:+04.2f}  velocity: {:+04.2f}'.format(angle, throttle, drive_mode, lag, self.velocity), end='')           
             
             time.sleep(self.drive_loop_delay)
-        
+            
+    def odometer_isr():
+        self.odometer_timestamps.append(time.time())
