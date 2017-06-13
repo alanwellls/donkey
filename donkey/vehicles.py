@@ -25,6 +25,10 @@ class BaseVehicle:
         self.remote = remote
         self.odometer = odometer
         
+        self.odometer_timestamps = []
+        self.velocity = 0.0
+        self.distance = 0.0
+        
     def start(self):
         start_time = time.time()
         angle = 0.
@@ -35,9 +39,7 @@ class BaseVehicle:
             GPIO.setmode(GPIO.BCM)
             GPIO.setup(23, GPIO.IN)
             GPIO.add_event_detect(23, GPIO.BOTH, callback=self.odometer_isr)
-            self.odometer_timestamps = []
-            self.velocity = 0.0
-            self.distance = 0.0
+
 
         #drive loop
         while True:
