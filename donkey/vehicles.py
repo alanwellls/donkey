@@ -85,5 +85,5 @@ class BaseVehicle:
             
             time.sleep(self.drive_loop_delay)
             
-    def odometer_isr():
+    def odometer_isr(channel):
         self.odometer_timestamps.append(time.time())
