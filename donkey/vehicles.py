@@ -65,7 +65,7 @@ class BaseVehicle:
 
             self.actuator_mixer.update(throttle, angle)
             
-            if(self.odometer[0]):
+            if((self.odometer[0]) & (len(self.odometer_timestamps) > 0)):
                 #increment the distance counter
                 self.distance += len(self.odometer_timestamps) * self.odometer[1] 
                 
