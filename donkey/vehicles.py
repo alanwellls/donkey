@@ -36,7 +36,8 @@ class BaseVehicle:
             GPIO.setup(23, GPIO.IN)
             GPIO.add_event_detect(23, GPIO.BOTH, callback=odometer_isr)
             self.odometer_timestamps = []
-            self.velocity = None
+            self.velocity = 0.0
+            self.distance = 0.0
 
         #drive loop
         while True:
@@ -63,11 +64,17 @@ class BaseVehicle:
             self.actuator_mixer.update(throttle, angle)
             
             if(self.odometer[0]):
+                #increment the distance counter
+                self.distance += len(self.odometer_timestamps) * self.odometer[1] 
+                
                 #trim the timestamps to last 10
-                self.odometer_timestamps = self.odometer_timestamps[-10]
+                if (len(self.odometer_timestamps) > 10):
+                    self.odometer_timestamps = self.odometer_timestamps[-10]
+                
                 time_elapsed = (odometer_timestamps[-1] - odometer_timestamps[0]) * 1000
+                
                 #calculate velocity
-                self.velocity = (self.odometer[1] * 9) / time_elapsed
+                self.velocity = (self.odometer[1] * len(self.odometer_timestamps)) / time_elapsed
                 
             #print current car state
             end = time.time()
