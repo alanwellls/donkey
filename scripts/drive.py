@@ -17,7 +17,6 @@ import os
 from docopt import docopt
 
 import donkey as dk
-import pdb
 
 # Get args.
 args = docopt(__doc__)
@@ -58,8 +57,6 @@ if __name__ == '__main__':
     #setup a local pilot
     mypilot = dk.pilots.KerasCategorical(model_path=cfg['pilot_model_path'])
     mypilot.load()
-    
-    pdb.set_trace()
     
     #set odometry info
     if(cfg['odometer_enabled'] == 1):
