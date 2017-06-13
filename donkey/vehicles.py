@@ -67,7 +67,7 @@ class BaseVehicle:
                 #increment the distance counter
                 self.distance += len(self.odometer_timestamps) * self.odometer[1] 
                 
-                #trim the timestamps to last 10
+                #trim the timestamps list to last 10
                 if (len(self.odometer_timestamps) > 10):
                     self.odometer_timestamps = self.odometer_timestamps[-10]
                 

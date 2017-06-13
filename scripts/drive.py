@@ -60,7 +60,7 @@ if __name__ == '__main__':
     
     #set odometry info
     if(cfg['odometer_enabled'] == 'true'):
-        myodometer = (True, float(cfg['m_per_tick']))
+        myodometer = (True, float(cfg['odometer_m_per_tick']))
     else:
         myodometer = (False, 0.0)
     
