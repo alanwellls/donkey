@@ -25,6 +25,9 @@ class BaseVehicle:
         self.remote = remote
         self.odometer = odometer
 
+    def odometer_isr():
+        self.odometer_timestamps.append(time.time())
+        
     def start(self):
         start_time = time.time()
         angle = 0.
@@ -82,7 +85,4 @@ class BaseVehicle:
             print('\r CAR: angle: {:+04.2f}   throttle: {:+04.2f}   drive_mode: {}  lag: {:+04.2f}  velocity: {:+04.2f}'.format(angle, throttle, drive_mode, lag, self.velocity), end='')           
             
             time.sleep(self.drive_loop_delay)
-    
-    def odometer_isr():
-        self.odometer_timestamps.append(time.time())
         
