@@ -73,7 +73,7 @@ class BaseVehicle:
                 if (len(self.odometer_timestamps) > 10):
                     self.odometer_timestamps = self.odometer_timestamps[-10]
                 
-                time_elapsed = (odometer_timestamps[-1] - odometer_timestamps[0]) * 1000
+                time_elapsed = (self.odometer_timestamps[-1] - self.odometer_timestamps[0]) * 1000
                 
                 #calculate velocity
                 self.velocity = (self.odometer[1] * len(self.odometer_timestamps)) / time_elapsed
