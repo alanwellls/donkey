@@ -13,7 +13,8 @@ class BaseVehicle:
                  camera=None,
                  actuator_mixer=None,
                  pilot=None,
-                 remote=None):
+                 remote=None,
+                 odometer=(False, 0.0)):
 
         self.drive_loop_delay = drive_loop_delay #how long to wait between loops
 
@@ -22,11 +23,20 @@ class BaseVehicle:
         self.actuator_mixer = actuator_mixer
         self.pilot = pilot
         self.remote = remote
+        self.odometer = odometer
 
     def start(self):
         start_time = time.time()
         angle = 0.
         throttle = 0.
+        
+        if(self.odometer[0]):
+            import RPi.GPIO as GPIO
+            GPIO.setmode(GPIO.BCM)
+            GPIO.setup(23, GPIO.IN)
+            GPIO.add_event_detect(23, GPIO.BOTH, callback=odometer_isr)
+            self.odometer_timestamps = []
+            self.velocity = None
 
         #drive loop
         while True:
@@ -51,10 +61,21 @@ class BaseVehicle:
                 angle, _ = self.pilot.decide(img_arr)
 
             self.actuator_mixer.update(throttle, angle)
-
+            
+            if(self.odometer[0]):
+                #trim the timestamps to last 10
+                self.odometer_timestamps = self.odometer_timestamps[-10]
+                time_elapsed = (odometer_timestamps[-1] - odometer_timestamps[0]) * 1000
+                #calculate velocity
+                self.velocity = (self.odometer[1] * 9) / time_elapsed
+                
             #print current car state
             end = time.time()
             lag = end - start
-            print('\r CAR: angle: {:+04.2f}   throttle: {:+04.2f}   drive_mode: {}  lag: {:+04.2f}'.format(angle, throttle, drive_mode, lag), end='')           
+            print('\r CAR: angle: {:+04.2f}   throttle: {:+04.2f}   drive_mode: {}  lag: {:+04.2f}  velocity: {:+04.2f}'.format(angle, throttle, drive_mode, lag, self.velocity), end='')           
             
             time.sleep(self.drive_loop_delay)
+    
+    def odometer_isr():
+        self.odometer_timestamps.append(time.time())
+        

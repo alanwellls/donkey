@@ -57,13 +57,21 @@ if __name__ == '__main__':
     #setup a local pilot
     mypilot = dk.pilots.KerasCategorical(model_path=cfg['pilot_model_path'])
     mypilot.load()
+    
+    #set odometry info
+    if(cfg['odometer_enabled'] == 'true'):
+        myodometer = (True, float(cfg['m_per_tick']))
+    else:
+        myodometer = (False, 0.0)
+    
 
     #Create your car
     car = dk.vehicles.BaseVehicle(drive_loop_delay=cfg['vehicle_loop_delay'],
                                   camera=mycamera,
                                   actuator_mixer=mymixer,
                                   remote=myremote,
-                                  pilot=mypilot)
+                                  pilot=mypilot,
+                                  odometer=myodometer)
     
     #Start the drive loop
     car.start()
