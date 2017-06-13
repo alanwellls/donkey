@@ -44,5 +44,9 @@ def parse_config(config_path):
 
     pilot = config['pilot']
     cfg['pilot_model_path'] = os.path.expanduser(pilot.get('model_path'))
+    
+    odometer = config['odometer']
+    cfg['odometer_enabled'] = odometer.getint('enabled')
+    cfg['odometer_m_per_tick'] = odometer.getfloat('m_per_tick')
 
     return cfg

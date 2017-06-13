@@ -62,7 +62,7 @@ if __name__ == '__main__':
     pdb.set_trace()
     
     #set odometry info
-    if(cfg['odometer_enabled'] == 'true'):
+    if(cfg['odometer_enabled'] == 1):
         myodometer = (True, float(cfg['odometer_m_per_tick']))
     else:
         myodometer = (False, 0.0)
