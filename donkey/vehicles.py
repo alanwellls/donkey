@@ -25,7 +25,9 @@ class BaseVehicle:
         self.remote = remote
         self.odometer = odometer
         
-        self.odometer_timestamps = []
+        global odometer_timestamps
+        odometer_timestamps = []
+        
         self.velocity = 0.0
         self.distance = 0.0
         
@@ -86,4 +88,5 @@ class BaseVehicle:
             time.sleep(self.drive_loop_delay)
             
     def odometer_isr(arg1, arg2):
-        self.odometer_timestamps.append(time.time())
+        global odometer_timestamps
+        odometer_timestamps.append(time.time())
