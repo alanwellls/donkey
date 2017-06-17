@@ -101,7 +101,7 @@ class RemoteClient():
         return self.state['angle'], self.state['throttle'], self.state['drive_mode']
 
         
-    def decide(self, img_arr, angle, throttle, milliseconds):
+    def decide(self, img_arr, angle, throttle, milliseconds, distance, velocity):
         '''
         Posts current car sensor data to webserver and returns
         angle and throttle recommendations. 
