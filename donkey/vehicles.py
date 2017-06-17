@@ -90,6 +90,7 @@ class BaseVehicle:
                 self.velocity = (self.odometer[1] * len(self.odometer_timestamps)) / time_elapsed
                 
             #print current car state
+            print(self.odometer_timestamps)
             end = time.time()
             lag = end - start
             print('\r CAR: angle: {:+04.2f}   throttle: {:+04.2f}   drive_mode: {}  lag: {:+04.2f}  velocity: {:+04.2f}'.format(angle, throttle, drive_mode, lag, self.velocity), end='')           
