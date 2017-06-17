@@ -7,6 +7,9 @@ sensors, actuators, pilots and remotes.
 
 import time
 
+global isr_timestamps
+isr_timestamps = []
+
 class BaseVehicle:
     def __init__(self,
                  drive_loop_delay = .5,
@@ -25,8 +28,7 @@ class BaseVehicle:
         self.remote = remote
         self.odometer = odometer
         
-        global odometer_timestamps
-        odometer_timestamps = []
+        self.odometer_timestamps = []
         
         self.velocity = 0.0
         self.distance = 0.0
@@ -67,7 +69,14 @@ class BaseVehicle:
 
             self.actuator_mixer.update(throttle, angle)
             
-            if((self.odometer[0]) & (len(self.odometer_timestamps) > 0)):
+
+            global isr_timestamps
+            
+            if((self.odometer[0]) & (len(isr_timestamps) > 0)):
+                
+                self.odometer_timestamps = isr_timestamps
+                isr_timestamps = []
+                            
                 #increment the distance counter
                 self.distance += len(self.odometer_timestamps) * self.odometer[1] 
                 
@@ -88,5 +97,5 @@ class BaseVehicle:
             time.sleep(self.drive_loop_delay)
             
     def odometer_isr(arg1, arg2):
-        global odometer_timestamps
-        odometer_timestamps.append(time.time())
+        global isr_timestamps
+        isr_timestamps.append(time.time())
