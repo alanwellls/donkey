@@ -41,7 +41,7 @@ class BaseVehicle:
         if(self.odometer[0]):
             import RPi.GPIO as GPIO
             GPIO.setmode(GPIO.BCM)
-            GPIO.setup(23, GPIO.IN)
+            GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP)
             GPIO.add_event_detect(23, GPIO.BOTH, callback=self.odometer_isr)
 
 
@@ -72,10 +72,11 @@ class BaseVehicle:
 
             global ticks
             
-            if((self.odometer[0]) & (ticks > 0)):
-                print("ticks", ticks)
+            if(self.odometer[0]):
                 last_count = ticks
                 ticks = 0
+                
+                print("last_count", last_count)
                             
                 #increment the distance counter
                 self.distance += last_count * self.odometer[1] 
@@ -86,7 +87,7 @@ class BaseVehicle:
             #print current car state
             end = time.time()
             lag = end - start
-            print('\r CAR: angle: {:+04.2f}   throttle: {:+04.2f}   drive_mode: {}  lag: {:+04.2f}  velocity: {:+04.2f}'.format(angle, throttle, drive_mode, lag, self.velocity), end='')           
+            print('\r CAR: angle: {:+04.2f}   throttle: {:+04.2f}   drive_mode: {}  lag: {:+04.2f}  velocity: {:+04.2f} distance: {:+04.2f}'.format(angle, throttle, drive_mode, lag, self.velocity, self.distance), end='')           
             
             time.sleep(self.drive_loop_delay)
             
