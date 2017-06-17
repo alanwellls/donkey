@@ -88,7 +88,7 @@ class BaseVehicle:
             #print current car state
             end = time.time()
             lag = end - start
-            avg_velocity = sum(velocities) / float(len(velocities))
+            avg_velocity = sum(self.velocities) / float(len(self.velocities))
             
             print('\r CAR: angle: {:+04.2f}   throttle: {:+04.2f}   drive_mode: {}  lag: {:+04.2f}  velocity: {:+04.2f} m/s distance: {:+04.2f} m'.format(angle, throttle, drive_mode, lag, avg_velocity, self.distance), end='')           
             
