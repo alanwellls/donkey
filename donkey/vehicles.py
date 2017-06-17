@@ -28,9 +28,7 @@ class BaseVehicle:
         self.remote = remote
         self.odometer = odometer
         
-        self.odometer_timestamps = []
-        
-        self.velocity = 0.0
+        self.velocities = []
         self.distance = 0.0
         
     def start(self):
@@ -75,19 +73,24 @@ class BaseVehicle:
             if(self.odometer[0]):
                 last_count = ticks
                 ticks = 0
-                
-                print("last_count", last_count)
                             
                 #increment the distance counter
                 self.distance += last_count * self.odometer[1] 
                 
                 #calculate velocity
-                self.velocity = (self.odometer[1] * last_count) / self.drive_loop_delay
+                velocity = (self.odometer[1] * last_count) / self.drive_loop_delay
+                
+                if(len(self.velocities) > 4):
+                    self.velocities.pop(0)
+                
+                self.velocities.append(velocity)
                 
             #print current car state
             end = time.time()
             lag = end - start
-            print('\r CAR: angle: {:+04.2f}   throttle: {:+04.2f}   drive_mode: {}  lag: {:+04.2f}  velocity: {:+04.2f} distance: {:+04.2f}'.format(angle, throttle, drive_mode, lag, self.velocity, self.distance), end='')           
+            avg_velocity = sum(velocities) / float(len(velocities))
+            
+            print('\r CAR: angle: {:+04.2f}   throttle: {:+04.2f}   drive_mode: {}  lag: {:+04.2f}  velocity: {:+04.2f} m/s distance: {:+04.2f} m'.format(angle, throttle, drive_mode, lag, avg_velocity, self.distance), end='')           
             
             time.sleep(self.drive_loop_delay)
             
