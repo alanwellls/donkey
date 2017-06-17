@@ -7,8 +7,8 @@ sensors, actuators, pilots and remotes.
 
 import time
 
-global isr_timestamps
-isr_timestamps = []
+global ticks
+ticks = 0
 
 class BaseVehicle:
     def __init__(self,
@@ -70,27 +70,20 @@ class BaseVehicle:
             self.actuator_mixer.update(throttle, angle)
             
 
-            global isr_timestamps
+            global ticks
             
-            if((self.odometer[0]) & (len(isr_timestamps) > 0)):
-                
-                self.odometer_timestamps = isr_timestamps
-                isr_timestamps = []
+            if((self.odometer[0]) & (ticks > 0)):
+                print("ticks", ticks)
+                last_count = ticks
+                ticks = 0
                             
                 #increment the distance counter
-                self.distance += len(self.odometer_timestamps) * self.odometer[1] 
-                
-                #trim the timestamps list to last 10
-                if (len(self.odometer_timestamps) > 10):
-                    self.odometer_timestamps = self.odometer_timestamps[-10]
-                
-                time_elapsed = (self.odometer_timestamps[-1] - self.odometer_timestamps[0]) * 1000
+                self.distance += last_count * self.odometer[1] 
                 
                 #calculate velocity
-                self.velocity = (self.odometer[1] * len(self.odometer_timestamps)) / time_elapsed
+                self.velocity = (self.odometer[1] * last_count) / self.drive_loop_delay
                 
             #print current car state
-            print(self.odometer_timestamps)
             end = time.time()
             lag = end - start
             print('\r CAR: angle: {:+04.2f}   throttle: {:+04.2f}   drive_mode: {}  lag: {:+04.2f}  velocity: {:+04.2f}'.format(angle, throttle, drive_mode, lag, self.velocity), end='')           
@@ -98,5 +91,5 @@ class BaseVehicle:
             time.sleep(self.drive_loop_delay)
             
     def odometer_isr(arg1, arg2):
-        global isr_timestamps
-        isr_timestamps.append(time.time())
+        global ticks
+        ticks += 1
