@@ -24,6 +24,8 @@ from PIL import Image
 
 import donkey as dk
 
+import pdb
+
 
 class RemoteClient():
     '''
@@ -144,7 +146,7 @@ class RemoteClient():
         lag = end-start
         self.log('{}, {} \n'.format(datetime.now().time() , lag ))
         #print('remote lag: %s' %lag)
-
+        pdb.set_trace()
         data = json.loads(r.text)
         angle = float(data['angle'])
         throttle = float(data['throttle'])
