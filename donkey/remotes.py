@@ -44,7 +44,9 @@ class RemoteClient():
                  'angle': 0.0,
                  'throttle': 0.0,
                  'milliseconds': 0,
-                 'drive_mode': 'user'}
+                 'drive_mode': 'user',
+                 'distance' : 0.0,
+                 'velocity': 0.0}
 
         self.state = state
         self.start()
@@ -76,7 +78,9 @@ class RemoteClient():
             resp  = self.decide(self.state['img_arr'], 
                                 self.state['angle'],
                                 self.state['throttle'],
-                                self.state['milliseconds'],)
+                                self.state['milliseconds'],
+                                self.state['distance'],
+                                self.state['velocity'])
             angle, throttle, drive_mode = resp
 
             #update sate with current values
@@ -107,7 +111,9 @@ class RemoteClient():
         data = {
                 'angle': str(angle),
                 'throttle': str(throttle),
-                'milliseconds': str(milliseconds)
+                'milliseconds': str(milliseconds),
+                'distance': str(distance),
+                'velocity': str(velocity)
                 }
 
 
@@ -248,6 +254,8 @@ class DonkeyPilotApplication(tornado.web.Application):
                         'drive_mode':'user', 
                         'milliseconds': 0,
                         'recording': False,
+                        'distance' : 0,
+                        'velocity' : 0,
                         'pilot': dk.pilots.BasePilot(),
                         'session': sh.new()})
 
@@ -368,6 +376,8 @@ class ControlAPI(tornado.web.RequestHandler):
         V['img'] = img
         V['pilot_angle'] = pilot_angle
         V['pilot_throttle'] = pilot_throttle
+        V['distance'] = distance
+        V['velocity'] = velocity
 
         #depending on the drive mode, return user or pilot values
 
@@ -377,14 +387,16 @@ class ControlAPI(tornado.web.RequestHandler):
         elif V['drive_mode'] == 'auto':
             angle, throttle  = V['pilot_angle'], V['pilot_throttle']
 
-        print('\r REMOTE: angle: {:+04.2f}   throttle: {:+04.2f}   drive_mode: {}'.format(angle, throttle, V['drive_mode']), end='')
+        print('\r REMOTE: angle: {:+04.2f}   throttle: {:+04.2f}   drive_mode: {}, distance: {} m, velocity: {} m/s'.format(angle, throttle, V['drive_mode'], distance, velocity), end='')
 
 
         if V['recording'] == True:
             #save image with encoded angle/throttle values
             V['session'].put(img, 
                              angle=angle,
-                             throttle=throttle, 
+                             throttle=throttle,
+                             distance=distance,
+                             velocity=velocity, 
                              milliseconds=0.0)
 
         #retun angel/throttle values to vehicle with json response

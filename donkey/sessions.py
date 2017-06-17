@@ -31,13 +31,13 @@ class Session():
         self.session_dir = path
         self.frame_count = 0
 
-    def put(self, img, angle=None, throttle=None, milliseconds=None):
+    def put(self, img, angle=None, throttle=None, distance=None, velocity=None, milliseconds=None):
         
         ''' 
         Save image with encoded angle, throttle and time data in the filename
         '''
         self.frame_count += 1
-        filepath = create_img_filepath(self.session_dir, self.frame_count, angle, throttle, milliseconds)
+        filepath = create_img_filepath(self.session_dir, self.frame_count, angle, throttle, distance, velocity, milliseconds)
         img.save(filepath, 'jpeg')
 
 
@@ -268,12 +268,14 @@ def parse_img_filepath(filepath):
     return data
 
 
-def create_img_filepath(directory, frame_count, angle, throttle, milliseconds):
+def create_img_filepath(directory, frame_count, angle, throttle, distance, velocity, milliseconds):
     filepath = str("%s/" % directory +
                 "frame_" + str(frame_count).zfill(5) +
                 "_ttl_" + str(throttle) +
                 "_agl_" + str(angle) +
                 "_mil_" + str(milliseconds) +
+                "_dist_" + str(distance) +
+                "_vel_" + str(velocity) +
                 '.jpg')
     return filepath
 
