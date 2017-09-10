@@ -81,7 +81,7 @@ def drive(model_path=None):
     V.add(steering, inputs=['angle'])
     V.add(throttle, inputs=['throttle'])
 
-    odometer = dk.parts.RotaryEncoder(m_per_tick=0.0329, pin=23)
+    odometer = dk.parts.RotaryEncoder(mm_per_tick=0.1923, pin=23)
     V.add(odometer, outputs=['odometer/meters', 'odometer/meters_per_second'], threaded=True)
     
     #add tub to save data

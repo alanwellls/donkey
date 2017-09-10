@@ -5,14 +5,14 @@ Rotary Encoder
 import time
 
 class RotaryEncoder():
-    def __init__(self, m_per_tick=0.0329, pin=23):
+    def __init__(self, mm_per_tick=0.1923, pin=23):
         import RPi.GPIO as GPIO
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.add_event_detect(pin, GPIO.BOTH, callback=self.isr)
 
         # initialize the odometer values
-        self.m_per_tick = m_per_tick
+        self.m_per_tick = mm_per_tick / 1000.0
         self.meters = 0
         self.last_time = time.time()
         self.meters_per_second = 0
