@@ -259,7 +259,7 @@ class JoystickPilot():
                 '''
                 if self.recording:
                     self.recording = False
-                else
+                else:
                     self.recording = True
 
                 print('recording:', self.recording)
