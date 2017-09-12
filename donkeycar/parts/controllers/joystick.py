@@ -264,6 +264,20 @@ class JoystickPilot():
 
                 print('recording:', self.recording)
 
+            if button == 'dpad_up' and button_state == 1:
+                '''
+                increase max throttle setting
+                '''
+                self.max_throttle = min(1.0, max_throttle + 0.05)
+                print('max_throttle:', self.max_throttle)
+
+            if button == 'dpad_down' and button_state == 1:
+                '''
+                decrease max throttle setting
+                '''
+                self.max_throttle = max(0.0, max_throttle - 0.05)
+                print('max_throttle:', self.max_throttle)
+
             time.sleep(self.poll_delay)
 
     def run_threaded(self, img_arr=None):
