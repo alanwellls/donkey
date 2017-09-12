@@ -253,7 +253,7 @@ class JoystickPilot():
                     self.mode = 'user'
                 print('new mode:', self.mode)
 
-            if button == 'thumbr' and button_state == 1:
+            if button == 'circle' and button_state == 1:
                 '''
                 toggle recording on/off
                 '''
