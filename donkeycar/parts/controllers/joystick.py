@@ -253,7 +253,16 @@ class JoystickPilot():
                     self.mode = 'user'
                 print('new mode:', self.mode)
 
-            self.recording = (self.throttle != 0.0 and self.mode == 'user')                
+            if button == 'thumbr' and button_state == 1:
+                '''
+                toggle recording on/off
+                '''
+                if self.recording:
+                    self.recording = False
+                else
+                    self.recording = True
+
+                print('recording:', self.recording)
 
             time.sleep(self.poll_delay)
 
