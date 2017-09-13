@@ -363,9 +363,9 @@ class PIDController:
 
         # Update the output
         self.alpha = curr_alpha
-        print('PID target value:', target_value)
-        print('PID feedback value:', feedback)
-        print('PID output:', self.alpha)
+        #print('PID target value:', target_value)
+        #print('PID feedback value:', feedback)
+        #print('PID output:', self.alpha)
         return feedback + curr_alpha
 
 class MockController(object):
