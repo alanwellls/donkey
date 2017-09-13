@@ -310,7 +310,11 @@ class Teensy:
 
         return ret
 
-class PIDController():
+class PIDController:
+    """ Performs a PID computation and returns a control value.
+        This is based on the elapsed time (dt) and the current value of the process variable 
+        (i.e. the thing we're measuring and trying to change).
+    """
     def __init__(self, p=0, i=0, d=0):
         
         # initialze gains
@@ -331,10 +335,6 @@ class PIDController():
 
 
     def run(self, target_value, feedback):
-        """ Performs a PID computation and returns a control value.
-            This is based on the elapsed time (dt) and the current value of the process variable 
-            (i.e. the thing we're measuring and trying to change).
-        """
         curr_tm = time.time()
 
         self.target = target_value

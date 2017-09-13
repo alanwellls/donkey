@@ -81,7 +81,7 @@ def drive(model_path=None):
       direction = np.sign(current_throttle)
       return (current_velocity/max_velocity)*direction
 
-    velocity_to_throttle_part = dk.parts.Lambda(velocity_to_throttle)
+    velocity_to_throttle_part = dk.parts.Lambda(measured_throttle)
     V.add(velocity_to_throttle_part,
           inputs=['odometer/meters_per_second', 'target_throttle'],
           outputs=['measured_throttle'])
