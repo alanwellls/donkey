@@ -138,6 +138,8 @@ class Joystick():
             self.button_map.append(btn_name)
             self.button_states[btn_name] = 0
 
+        self.show_map()
+        
         return True
 
 
