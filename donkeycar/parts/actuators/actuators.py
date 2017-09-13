@@ -310,6 +310,63 @@ class Teensy:
 
         return ret
 
+class PIDController():
+    def __init__(self, p=0, i=0, d=0):
+        
+        # initialze gains
+        self.Kp = p
+        self.Ki = i
+        self.Kd = d
+
+        # The value the controller is trying to get the system to achieve.
+        self.target = 0
+
+        # initialize delta t variables
+        self.prev_tm = time.time()
+        self.prev_feedback = 0
+        self.error = None
+
+        # initialize the output
+        self.alpha = 0
+
+
+    def run(self, target_value, feedback):
+        """ Performs a PID computation and returns a control value.
+            This is based on the elapsed time (dt) and the current value of the process variable 
+            (i.e. the thing we're measuring and trying to change).
+        """
+        curr_tm = time.time()
+
+        self.target = target_value
+        error = self.error = self.target - feedback
+        
+        # Calculate time differential.
+        dt = curr_tm - self.prev_tm
+        
+        # Initialize output variable.
+        curr_alpha = 0
+        
+        # Add proportional component.
+        curr_alpha -= self.Kp * error
+        
+        # Add integral component.
+        curr_alpha -= self.Ki * (error * dt)
+        
+        # Add differential component (avoiding divide-by-zero).
+        if dt > 0:
+            curr_alpha -= self.Kd * ((feedback - self.prev_feedback) / float(dt))
+        
+        # Maintain memory for next loop.
+        self.prev_tm = curr_tm
+        self.prev_feedback = feedback
+
+        # Update the output
+        self.alpha = curr_alpha
+        print('PID target value:', target_value)
+        print('PID feedback value:', feedback)
+        print('PID output:', self.alpha)
+        return feedback + curr_alpha
+
 class MockController(object):
     def __init__(self):
         pass

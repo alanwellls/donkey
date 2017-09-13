@@ -64,7 +64,7 @@ class Joystick():
             #PS3 sixaxis specific
             0x12c : "triangle", 
             0x12d : "circle",
-            0x12e : "x",
+            0x12e : "cross",
             0x12f : 'square',
 
             0x130 : 'a',
@@ -271,12 +271,25 @@ class JoystickPilot():
                 self.max_throttle = min(1.0, self.max_throttle + 0.05)
                 print('max_throttle:', self.max_throttle)
 
-            if button == 'x' and button_state == 1:
+            if button == 'cross' and button_state == 1:
                 '''
                 decrease max throttle setting
                 '''
                 self.max_throttle = max(0.0, self.max_throttle - 0.05)
                 print('max_throttle:', self.max_throttle)
+
+            if button == 'dpad_up':
+                print('dpad_up state:', button_state)
+
+            if button == 'thumbr':
+                print('thumbr state:', button_state)
+
+            if button == 'select':
+                print('select state:', button_state)
+
+            if button == 'tr':
+                print('tr state:', button_state)
+
 
             time.sleep(self.poll_delay)
 
