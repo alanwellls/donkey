@@ -45,6 +45,10 @@ class RotaryEncoder():
                 self.meters += distance
                 self.meters_per_second = velocity
 
+                #console output for debugging
+                print('distance (m):', self.meters)
+                print('velocity (m/s):', self.meters_per_second)
+
     def run_threaded(self):
         return self.meters, self.meters_per_second
 

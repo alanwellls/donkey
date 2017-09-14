@@ -96,7 +96,7 @@ def drive(model_path=None):
           outputs=['pid/output'])
 
     def throttle_with_pid(target_throttle, pid_output):
-      return target_throttle + alpha
+      return target_throttle + pid_output
 
     pid_throttle_part = dk.parts.Lambda(throttle_with_pid)
     V.add(pid_throttle_part,
