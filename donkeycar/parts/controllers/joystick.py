@@ -281,8 +281,8 @@ class JoystickPilot():
                 print('max_throttle:', self.max_throttle)
 
             if button:
-                print('button,' button)
-                print('button_state', button_state)
+                print('button:', button)
+                print('button_state:', button_state)
 
             time.sleep(self.poll_delay)
 
