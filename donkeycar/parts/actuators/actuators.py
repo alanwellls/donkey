@@ -5,6 +5,7 @@ are wrapped in a mixer class before being used in the drive loop.
 """
 
 import time
+import pdb
 
 from ... import utils
 
@@ -363,6 +364,8 @@ class PIDController:
 
         # Update the output
         self.alpha = curr_alpha
+
+        pdb.set_trace()
 
         if (curr_alpha != 0):
             print('PID target value:', target_value)
