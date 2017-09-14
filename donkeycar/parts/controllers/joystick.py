@@ -280,7 +280,7 @@ class JoystickPilot():
                 self.max_throttle = max(0.0, self.max_throttle - 0.05)
                 print('max_throttle:', self.max_throttle)
 
-            if button 
+            if button:
                 print('button,' button)
                 print('button_state', button_state)
 
