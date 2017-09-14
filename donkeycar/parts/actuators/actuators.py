@@ -363,10 +363,13 @@ class PIDController:
 
         # Update the output
         self.alpha = curr_alpha
-        #print('PID target value:', target_value)
-        #print('PID feedback value:', feedback)
-        #print('PID output:', self.alpha)
-        return feedback + curr_alpha
+
+        if (curr_alpha != 0):
+            print('PID target value:', target_value)
+            print('PID feedback value:', feedback)
+            print('PID output:', curr_alpha)
+
+        return curr_alpha
 
 class MockController(object):
     def __init__(self):

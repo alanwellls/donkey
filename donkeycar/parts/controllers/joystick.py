@@ -280,18 +280,9 @@ class JoystickPilot():
                 self.max_throttle = max(0.0, self.max_throttle - 0.05)
                 print('max_throttle:', self.max_throttle)
 
-            if button == 'dpad_up':
-                print('dpad_up state:', button_state)
-
-            if button == 'thumbr':
-                print('thumbr state:', button_state)
-
-            if button == 'select':
-                print('select state:', button_state)
-
-            if button == 'tr':
-                print('tr state:', button_state)
-
+            if button 
+                print('button,' button)
+                print('button_state', button_state)
 
             time.sleep(self.poll_delay)
 

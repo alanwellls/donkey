@@ -93,6 +93,14 @@ def drive(model_path=None):
     pid = dk.parts.PIDController()
     V.add(pid, 
           inputs=['target_throttle', 'measured_throttle'],
+          outputs=['pid/output'])
+
+    def throttle_with_pid(target_throttle, pid_output):
+      return target_throttle + alpha
+
+    pid_throttle_part = dk.parts.Lambda(throttle_with_pid)
+    V.add(pid_throttle_part,
+          inputs=['target_throttle','pid/output'],
           outputs=['pid_throttle'])
 
     steering_controller = dk.parts.PCA9685(1)
