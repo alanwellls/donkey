@@ -76,8 +76,10 @@ def drive(model_path=None):
     odometer = dk.parts.RotaryEncoder(mm_per_tick=0.1923, pin=23)
     V.add(odometer, outputs=['odometer/meters', 'odometer/meters_per_second'], threaded=True)
 
+    #Transform the velocity measured by the odometer into -1/1 scale
+    #so existing controls and modelsbased on -1/1 range can still be used
     def measured_throttle(current_velocity, current_throttle):
-      max_velocity = 9.0
+      max_velocity = 7.0
       if current_throttle < 0:
         direction = -1
       else:
@@ -91,13 +93,21 @@ def drive(model_path=None):
           inputs=['odometer/meters_per_second', 'target_throttle'],
           outputs=['measured_throttle'])
 
-    pid = dk.parts.PIDController()
+    pid = dk.parts.PIDController(p=0.2)
     V.add(pid, 
           inputs=['target_throttle', 'measured_throttle'],
           outputs=['pid/output'])
 
+    #Calculate the new throttle value using output from PID
+    #and clamp it to the -1/1 range
     def throttle_with_pid(target_throttle, pid_output):
       pid_throttle = target_throttle + pid_output
+      
+      if pid_throttle > 1.0:
+        pid_throttle = 1.0
+      elif pid_throttle < -1.0:
+        pid_throttle = -1.0
+
       print("pid_throttle:", pid_throttle)
       return pid_throttle
 
@@ -115,6 +125,9 @@ def drive(model_path=None):
                                     max_pulse=500, zero_pulse=370, min_pulse=220)
 
     V.add(steering, inputs=['angle'])
+
+    #Pass the PID throttle value into the controller instead of the
+    #raw throttle value from the user or pilot
     V.add(throttle, inputs=['pid_throttle'])
     
     #add tub to save data
