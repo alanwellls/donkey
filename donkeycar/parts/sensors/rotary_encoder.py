@@ -26,30 +26,30 @@ class RotaryEncoder():
     def update(self):
         # keep looping infinitely until the thread is stopped
         while(self.on):
+                
+            #save the ticks and reset the counter
+            ticks = self.counter
+            self.counter = 0
+            
+            #save off the last time interval and reset the timer
+            start_time = self.last_time
+            end_time = time.time()
+            self.last_time = end_time
+            
+            #calculate elapsed time and distance traveled
+            seconds = end_time - start_time
+            distance = ticks * self.m_per_tick
+            velocity = distance / seconds
+            
+            #update the odometer values
+            self.meters += distance
+            self.meters_per_second = velocity
+
+            if velocity > self.top_speed:
+                self.top_speed = velocity
+
+            #console output for debugging
             if(self.counter > 0):
-                
-                #save the ticks and reset the counter
-                ticks = self.counter
-                self.counter = 0
-                
-                #save off the last time interval and reset the timer
-                start_time = self.last_time
-                end_time = time.time()
-                self.last_time = end_time
-                
-                #calculate elapsed time and distance traveled
-                seconds = end_time - start_time
-                distance = ticks * self.m_per_tick
-                velocity = distance / seconds
-                
-                #update the odometer values
-                self.meters += distance
-                self.meters_per_second = velocity
-
-                if velocity > self.top_speed:
-                    self.top_speed = velocity
-
-                #console output for debugging
                 print('distance (m):', self.meters)
                 print('velocity (m/s):', self.meters_per_second)
 
