@@ -349,14 +349,14 @@ class PIDController:
         curr_alpha = 0
         
         # Add proportional component.
-        curr_alpha -= self.Kp * error
+        curr_alpha += self.Kp * error
         
         # Add integral component.
-        curr_alpha -= self.Ki * (error * dt)
+        curr_alpha += self.Ki * (error * dt)
         
         # Add differential component (avoiding divide-by-zero).
         if dt > 0:
-            curr_alpha -= self.Kd * ((feedback - self.prev_feedback) / float(dt))
+            curr_alpha += self.Kd * ((feedback - self.prev_feedback) / float(dt))
         
         # Maintain memory for next loop.
         self.prev_tm = curr_tm
@@ -365,9 +365,8 @@ class PIDController:
         # Update the output
         self.alpha = curr_alpha
 
-        pdb.set_trace()
-
         if (curr_alpha != 0):
+            pdb.set_trace()
             print('PID target value:', target_value)
             print('PID feedback value:', feedback)
             print('PID output:', curr_alpha)
