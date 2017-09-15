@@ -85,7 +85,10 @@ def drive(model_path=None):
       else:
         direction = 1
       measured_throttle = (current_velocity/max_velocity)*direction
-      print("measured_throttle:", measured_throttle)
+      
+      if measured_throttle != 0.0:
+        print("measured_throttle:", measured_throttle)
+
       return measured_throttle
 
     velocity_to_throttle_part = dk.parts.Lambda(measured_throttle)
@@ -108,7 +111,9 @@ def drive(model_path=None):
       elif pid_throttle < -1.0:
         pid_throttle = -1.0
 
-      print("pid_throttle:", pid_throttle)
+      if pid_throttle != 0.0:
+        print("pid_throttle:", pid_throttle)
+
       return pid_throttle
 
     pid_throttle_part = dk.parts.Lambda(throttle_with_pid)
