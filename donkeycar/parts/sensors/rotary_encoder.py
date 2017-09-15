@@ -50,8 +50,8 @@ class RotaryEncoder():
 
             #console output for debugging
             if(self.counter > 0):
-                print('distance (m):', self.meters)
-                print('velocity (m/s):', self.meters_per_second)
+                print('distance (m):', round(self.meters, 4))
+                print('velocity (m/s):', round(self.meters_per_second, 4))
 
     def run_threaded(self):
         return self.meters, self.meters_per_second
