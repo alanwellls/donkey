@@ -231,8 +231,8 @@ class JoystickPilot():
         button map name => PS3 button => function
         * top2 = PS3 dpad up => increase throttle scale
         * base = PS3 dpad down => decrease throttle scale
-        * base2 = PS3 dpad left => increase steering scale
-        * pinkie = PS3 dpad right => decrease steering scale
+        * base2 = PS3 dpad left => decrease steering scale
+        * pinkie = PS3 dpad right => increase steering scale
         * trigger = PS3 select => switch modes
         * top = PS3 start => toggle constant throttle
         * base5 = PS3 left trigger 1 
@@ -321,14 +321,14 @@ class JoystickPilot():
                 self.throttle_scale = round(max(-1.0, self.throttle_scale - 0.05), 2)
                 print('throttle_scale:', self.throttle_scale)
 
-            if button == 'base2' and button_state == 1:
+            if button == 'pinkie' and button_state == 1:
                 '''
                 increase steering scale
                 '''
                 self.steering_scale = round(min(1.0, self.steering_scale + 0.05), 2)
                 print('steering_scale:', self.steering_scale)
 
-            if button == 'pinkie' and button_state == 1:
+            if button == 'base2' and button_state == 1:
                 '''
                 decrease steering scale
                 '''
