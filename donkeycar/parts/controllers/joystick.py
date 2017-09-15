@@ -326,14 +326,14 @@ class JoystickPilot():
                 increase steering scale
                 '''
                 self.steering_scale = round(min(1.0, self.steering_scale + 0.05), 2)
-                print('throttle_scale:', self.throttle_scale)
+                print('steering_scale:', self.steering_scale)
 
             if button == 'pinkie' and button_state == 1:
                 '''
                 decrease steering scale
                 '''
                 self.steering_scale = round(max(0.0, self.steering_scale - 0.05), 2)
-                print('throttle_scale:', self.steering_scale)
+                print('steering_scale:', self.steering_scale)
 
             if button == 'top' and button_state == 1:
                 '''
@@ -341,6 +341,7 @@ class JoystickPilot():
                 '''
                 if self.constant_throttle:
                     self.constant_throttle = False
+                    self.throttle = 0
                 else:
                     self.constant_throttle = True
                 print('constant_throttle:', self.constant_throttle)
