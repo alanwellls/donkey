@@ -137,8 +137,6 @@ class Joystick():
             btn_name = self.button_names.get(btn, 'unknown(0x%03x)' % btn)
             self.button_map.append(btn_name)
             self.button_states[btn_name] = 0
-
-        self.show_map()
         
         return True
 
@@ -212,6 +210,7 @@ class JoystickPilot():
         self.throttle_axis = throttle_axis
         self.steering_scale = steering_scale
         self.throttle_scale = throttle_scale
+        self.constant_throttle = False
         self.recording = False
 
         #init joystick
@@ -226,8 +225,24 @@ class JoystickPilot():
 
     def update(self):
         '''
-        poll a joystick for input events
+        poll a joystick for input events. configured for PS3 controller:
+
+        button map name => PS3 button => function
+        * top2 = PS3 dpad up => increase throttle scale
+        * base = PS3 dpad down => decrease throttle scale
+        * base2 = PS3 dpad left => increase steering scale
+        * pinkie = PS3 dpad right => decrease steering scale
+        * trigger = PS3 select => switch modes
+        * top = PS3 start => toggle constant throttle
+        * base5 = PS3 left trigger 1 => increase max throttle
+        * base3 = PS3 eft trigger 2
+        * base6 = PS3 right trigger 1 => decrease max throttle
+        * base4 = PS3 right trigger 2
+        * thumb2 = PS3 right thumb
+        * thumb = PS3 left thumb
+        * circle = PS3 circrle => toggle recording
         '''
+
         while self.running:
             button, button_state, axis, axis_val = self.js.poll()
         
@@ -236,11 +251,19 @@ class JoystickPilot():
                 print("angle", self.angle)
 
             if axis == self.throttle_axis:
-                #this value is often reversed, with positive value when pulling down
-                self.throttle = (self.throttle_scale * axis_val * self.max_throttle)
+                '''
+                set throttle using either constant throttle if enabled 
+                (ignores user input, sets throttle to max throttle value)
+                or via input from joystick
+                '''
+                if self.constant_throttle:
+                    self.throttle = self.max_throttle
+                else:
+                    #this value is often reversed, with positive value when pulling down
+                    self.throttle = (self.throttle_scale * axis_val * self.max_throttle)
                 print("throttle", self.throttle)
 
-            if button == 'square' and button_state == 1:
+            if button == 'trigger' and button_state == 1:
                 '''
                 switch modes from:
                 user: human controlled steer and throttle
@@ -266,19 +289,58 @@ class JoystickPilot():
 
                 print('recording:', self.recording)
 
-            if button == 'triangle' and button_state == 1:
+            if button == 'base5' and button_state == 1:
                 '''
                 increase max throttle setting
                 '''
-                self.max_throttle = min(1.0, self.max_throttle + 0.05)
+                self.max_throttle = round(min(1.0, self.max_throttle + 0.05), 2)
                 print('max_throttle:', self.max_throttle)
 
-            if button == 'cross' and button_state == 1:
+            if button == 'base6' and button_state == 1:
                 '''
                 decrease max throttle setting
                 '''
-                self.max_throttle = max(0.0, self.max_throttle - 0.05)
+                self.max_throttle = round(max(0.0, self.max_throttle - 0.05), 2)
                 print('max_throttle:', self.max_throttle)
+
+            if button == 'top2' and button_state == 1:
+                '''
+                increase throttle scale
+                '''
+                self.throttle_scale = round(min(1.0, self.throttle_scale + 0.05), 2)
+                print('throttle_scale:', self.throttle_scale)
+
+            if button == 'base' and button_state == 1:
+                '''
+                decrease throttle scale
+                '''
+                self.throttle_scale = round(max(0.0, self.throttle_scale - 0.05), 2)
+                print('throttle_scale:', self.throttle_scale)
+
+            if button == 'base2' and button_state == 1:
+                '''
+                increase steering scale
+                '''
+                self.steering_scale = round(min(1.0, self.steering_scale + 0.05), 2)
+                print('throttle_scale:', self.throttle_scale)
+
+            if button == 'pinkie' and button_state == 1:
+                '''
+                decrease steering scale
+                '''
+                self.steering_scale = round(max(0.0, self.steering_scale - 0.05), 2)
+                print('throttle_scale:', self.steering_scale)
+
+            if button == 'top' and button_state == 1:
+                '''
+                toggle constant throttle
+                '''
+                if self.constant_throttle:
+                    self.constant_throttle = False
+                else:
+                    self.constant_throttle = True
+                print('constant_throttle:', self.constant_throttle)
+
 
             time.sleep(self.poll_delay)
 
