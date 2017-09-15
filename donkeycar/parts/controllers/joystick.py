@@ -311,14 +311,14 @@ class JoystickPilot():
                 '''
                 increase throttle scale
                 '''
-                self.throttle_scale = round(min(1.0, self.throttle_scale + 0.05), 2)
+                self.throttle_scale = round(min(0.0, self.throttle_scale + 0.05), 2)
                 print('throttle_scale:', self.throttle_scale)
 
             if button == 'base' and button_state == 1:
                 '''
                 decrease throttle scale
                 '''
-                self.throttle_scale = round(max(0.0, self.throttle_scale - 0.05), 2)
+                self.throttle_scale = round(max(-1.0, self.throttle_scale - 0.05), 2)
                 print('throttle_scale:', self.throttle_scale)
 
             if button == 'base2' and button_state == 1:
