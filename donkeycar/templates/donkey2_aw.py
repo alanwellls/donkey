@@ -73,7 +73,7 @@ def drive(model_path=None):
                   'pilot/angle', 'pilot/throttle'], 
           outputs=['angle', 'target_throttle'])
     
-    odometer = dk.parts.RotaryEncoder(mm_per_tick=0.1923, pin=23)
+    odometer = dk.parts.RotaryEncoder(mm_per_tick=0.1923, pin=27)
     V.add(odometer, outputs=['odometer/meters', 'odometer/meters_per_second'], threaded=True)
 
     #Transform the velocity measured by the odometer into -1/1 scale
