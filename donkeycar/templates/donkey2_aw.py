@@ -30,7 +30,7 @@ def drive(model_path=None):
 
     V.add(ctr, 
           inputs=['cam/image_array'],
-          outputs=['user/angle', 'user/throttle', 'user/mode', 'recording'],
+          outputs=['user/angle', 'user/throttle', 'user/mode', 'recording', 'brake'],
           threaded=True)
     
     #See if we should even run the pilot module. 
@@ -126,9 +126,21 @@ def drive(model_path=None):
 
     V.add(steering, inputs=['angle'])
 
-    #Pass the PID throttle value into the controller instead of the
+    def throttle_with_brake(throttle, brake):
+      if brake:
+        print("Brake is on.")
+        return 0
+      else:
+        return throttle
+
+    throttle_with_brake_part = dk.parts.Lambda(throttle_with_brake)
+    V.add(throttle_with_brake_part,
+            inputs=['pid_throttle', 'brake'],
+            outputs=['throttle'])
+
+    #Pass the final throttle value into the controller instead of the
     #raw throttle value from the user or pilot
-    V.add(throttle, inputs=['pid_throttle'])
+    V.add(throttle, inputs=['throttle'])
     
     #add tub to save data
     inputs=['cam/image_array',
@@ -150,8 +162,6 @@ def drive(model_path=None):
     
     #run the vehicle for 20 seconds
     V.start(rate_hz=20)
-    
-    print("You can now go to <your pi ip address>:8887 to drive your car.")
 
 
 

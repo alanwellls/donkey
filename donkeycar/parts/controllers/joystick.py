@@ -210,6 +210,7 @@ class JoystickPilot():
         self.throttle_axis = throttle_axis
         self.steering_scale = steering_scale
         self.throttle_scale = throttle_scale
+        self.brake = False
         self.constant_throttle = False
         self.recording = False
 
@@ -234,13 +235,16 @@ class JoystickPilot():
         * pinkie = PS3 dpad right => decrease steering scale
         * trigger = PS3 select => switch modes
         * top = PS3 start => toggle constant throttle
-        * base5 = PS3 left trigger 1 => increase max throttle
-        * base3 = PS3 eft trigger 2
+        * base5 = PS3 left trigger 1 
+        * base3 = PS3 left trigger 2
         * base6 = PS3 right trigger 1 => decrease max throttle
         * base4 = PS3 right trigger 2
         * thumb2 = PS3 right thumb
         * thumb = PS3 left thumb
         * circle = PS3 circrle => toggle recording
+        * triangle = PS3 triangle => increase max throttle
+        * cross = PS3 cross => decrease max throttle
+        * square = PS3 square => brake
         '''
 
         while self.running:
@@ -289,14 +293,14 @@ class JoystickPilot():
 
                 print('recording:', self.recording)
 
-            if button == 'base5' and button_state == 1:
+            if button == 'triangle' and button_state == 1:
                 '''
                 increase max throttle setting
                 '''
                 self.max_throttle = round(min(1.0, self.max_throttle + 0.05), 2)
                 print('max_throttle:', self.max_throttle)
 
-            if button == 'base6' and button_state == 1:
+            if button == 'cross' and button_state == 1:
                 '''
                 decrease max throttle setting
                 '''
@@ -341,12 +345,22 @@ class JoystickPilot():
                     self.constant_throttle = True
                 print('constant_throttle:', self.constant_throttle)
 
+            if button == 'square' and button_state == 1:
+                '''
+                toggle the brake (overrides pilot and user throttle)
+                '''
+                if self.brake:
+                    self.brake = False
+                else:
+                    self.brake = True
+                print('brake:', self.brake)
+
 
             time.sleep(self.poll_delay)
 
     def run_threaded(self, img_arr=None):
         self.img_arr = img_arr
-        return self.angle, self.throttle, self.mode, self.recording
+        return self.angle, self.throttle, self.mode, self.recording, self.brake
 
     def shutdown(self):
         self.running = False
