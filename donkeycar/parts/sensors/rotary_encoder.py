@@ -5,7 +5,7 @@ Rotary Encoder
 import time
 
 class RotaryEncoder():
-    def __init__(self, mm_per_tick=0.5769, pin=27, poll_delay=0.0166):
+    def __init__(self, mm_per_tick=0.306096, pin=27, poll_delay=0.0166):
         import RPi.GPIO as GPIO
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(pin, GPIO.IN)
