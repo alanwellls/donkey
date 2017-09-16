@@ -367,9 +367,9 @@ class PIDController:
 
         if (curr_alpha != 0):
             #pdb.set_trace()
-            print('PID target value:', target_value)
-            print('PID feedback value:', feedback)
-            print('PID output:', curr_alpha)
+            print('PID target value:', round(target_value, 4))
+            print('PID feedback value:', round(feedback, 4))
+            print('PID output:', round(curr_alpha, 4))
 
         return curr_alpha
 

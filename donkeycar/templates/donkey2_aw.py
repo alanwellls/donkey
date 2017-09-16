@@ -86,8 +86,9 @@ def drive(model_path=None):
         direction = 1
       measured_throttle = (current_velocity/max_velocity)*direction
       
-      if measured_throttle != 0.0:
+      if target_throttle != 0.0:
         print("measured_throttle:", measured_throttle)
+        print("target_throttle:", target_throttle)
 
       return measured_throttle
 

@@ -344,6 +344,7 @@ class JoystickPilot():
                     self.throttle = 0
                 else:
                     self.constant_throttle = True
+                    self.throttle = self.max_throttle
                 print('constant_throttle:', self.constant_throttle)
 
             if button == 'square' and button_state == 1:
