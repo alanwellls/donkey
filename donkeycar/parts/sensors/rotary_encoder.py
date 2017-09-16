@@ -46,6 +46,10 @@ class RotaryEncoder():
 
             #console output for debugging
             if(self.counter > 0):
+                print('seconds:', seconds)
+                print('distance:', distance)
+                print('velocity:', velocity)
+
                 print('distance (m):', round(self.meters, 4))
                 print('velocity (m/s):', self.meters_per_second)
 
