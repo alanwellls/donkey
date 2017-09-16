@@ -16,7 +16,6 @@ import os
 import numpy as np
 import keras
 from ... import utils
-import pdb
 
 
 import donkeycar as dk
@@ -76,7 +75,6 @@ class KerasCategorical(KerasPilot):
         angle_binned, throttle = self.model.predict(img_arr)
         #angle_certainty = max(angle_binned[0])
         angle_unbinned = utils.linear_unbin(angle_binned)
-        pdb.set_trace()
         return angle_unbinned, throttle[0][0]
     
     
