@@ -26,7 +26,7 @@ def drive(model_path=None):
     
     #modify max_throttle closer to 1.0 to have more power
     #modify steering_scale lower than 1.0 to have less responsive steering
-    ctr = dk.parts.JoystickPilot(max_throttle=0.4, steering_scale=1.0)
+    ctr = dk.parts.JoystickPilot(max_throttle=0.5, steering_scale=1.0)
 
     V.add(ctr, 
           inputs=['cam/image_array'],
@@ -73,14 +73,14 @@ def drive(model_path=None):
                   'pilot/angle', 'pilot/throttle'], 
           outputs=['angle', 'target_throttle'])
     
-    odometer = dk.parts.RotaryEncoder(mm_per_tick=0.1923, pin=27)
+    odometer = dk.parts.RotaryEncoder(mm_per_tick=0.5769, pin=27)
     V.add(odometer, outputs=['odometer/meters', 'odometer/meters_per_second'], threaded=True)
 
     #Transform the velocity measured by the odometer into -1/1 scale
     #so existing controls and modelsbased on -1/1 range can still be used
     def measured_throttle(current_velocity, target_throttle):
       max_velocity = 7.0
-      
+
       if target_throttle < 0:
         direction = -1
       else:
@@ -99,7 +99,7 @@ def drive(model_path=None):
           inputs=['odometer/meters_per_second', 'target_throttle'],
           outputs=['measured_throttle'])
 
-    pid = dk.parts.PIDController(p=0.2)
+    pid = dk.parts.PIDController(p=0.4, d=0.2)
     V.add(pid, 
           inputs=['target_throttle', 'measured_throttle'],
           outputs=['pid/output'])
