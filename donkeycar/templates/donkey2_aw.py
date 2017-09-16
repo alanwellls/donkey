@@ -99,7 +99,7 @@ def drive(model_path=None):
           inputs=['odometer/meters_per_second', 'target_throttle'],
           outputs=['measured_throttle'])
 
-    pid = dk.parts.PIDController(p=0.4, d=0.2, i=0.1)
+    pid = dk.parts.PIDController(p=1.0, d=0.2, i=0.1)
     V.add(pid, 
           inputs=['target_throttle', 'measured_throttle'],
           outputs=['pid/output'])
