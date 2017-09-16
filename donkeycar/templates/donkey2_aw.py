@@ -78,12 +78,14 @@ def drive(model_path=None):
 
     #Transform the velocity measured by the odometer into -1/1 scale
     #so existing controls and modelsbased on -1/1 range can still be used
-    def measured_throttle(current_velocity, current_throttle):
+    def measured_throttle(current_velocity, target_throttle):
       max_velocity = 7.0
-      if current_throttle < 0:
+      
+      if target_throttle < 0:
         direction = -1
       else:
         direction = 1
+
       measured_throttle = (current_velocity/max_velocity)*direction
       
       if target_throttle != 0.0:
