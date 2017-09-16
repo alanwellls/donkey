@@ -3,13 +3,14 @@ Rotary Encoder
 """
 
 import time
+import pdb
 
 class RotaryEncoder():
     def __init__(self, mm_per_tick=0.5769, pin=27):
         import RPi.GPIO as GPIO
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.add_event_detect(pin, GPIO.BOTH, callback=self.isr)
+        GPIO.setup(pin, GPIO.IN)
+        GPIO.add_event_detect(pin, GPIO.RISING, callback=self.isr)
 
         # initialize the odometer values
         self.m_per_tick = mm_per_tick / 1000.0
@@ -45,10 +46,12 @@ class RotaryEncoder():
             self.meters_per_second = velocity
 
             #console output for debugging
-            if(self.counter > 0):
+            if(ticks > 0):
                 print('seconds:', seconds)
                 print('distance:', distance)
                 print('velocity:', velocity)
+
+                pdb.set_trace();
 
                 print('distance (m):', round(self.meters, 4))
                 print('velocity (m/s):', self.meters_per_second)
