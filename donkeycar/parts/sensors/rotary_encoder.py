@@ -3,7 +3,6 @@ Rotary Encoder
 """
 
 import time
-import pdb
 
 class RotaryEncoder():
     def __init__(self, mm_per_tick=0.5769, pin=27, poll_delay=0.0166):
@@ -51,8 +50,6 @@ class RotaryEncoder():
                 print('seconds:', seconds)
                 print('distance:', distance)
                 print('velocity:', velocity)
-
-                pdb.set_trace();
 
                 print('distance (m):', round(self.meters, 4))
                 print('velocity (m/s):', self.meters_per_second)
