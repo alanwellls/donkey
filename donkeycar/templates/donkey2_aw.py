@@ -62,9 +62,12 @@ def drive(model_path=None):
             return user_angle, user_throttle
         
         elif mode == 'local_angle':
+            print("pilot_angle:", pilot_angle)
             return pilot_angle, user_throttle
         
-        else: 
+        else:
+            print("pilot_angle:", pilot_angle)
+            print("pilot_throttle:", pilot_throttle)
             return pilot_angle, pilot_throttle
         
     drive_mode_part = dk.parts.Lambda(drive_mode)
