@@ -17,7 +17,6 @@ class RotaryEncoder():
         self.last_time = time.time()
         self.meters_per_second = 0
         self.counter = 0
-        self.top_speed = 0
         self.on = True
     
     def isr(self, channel):
@@ -45,13 +44,10 @@ class RotaryEncoder():
             self.meters += distance
             self.meters_per_second = velocity
 
-            if velocity > self.top_speed:
-                self.top_speed = velocity
-
             #console output for debugging
             if(self.counter > 0):
                 print('distance (m):', round(self.meters, 4))
-                print('velocity (m/s):', round(self.meters_per_second, 4))
+                print('velocity (m/s):', self.meters_per_second)
 
     def run_threaded(self):
         return self.meters, self.meters_per_second
