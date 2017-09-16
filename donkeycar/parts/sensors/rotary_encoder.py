@@ -6,7 +6,7 @@ import time
 import pdb
 
 class RotaryEncoder():
-    def __init__(self, mm_per_tick=0.5769, pin=27):
+    def __init__(self, mm_per_tick=0.5769, pin=27, poll_delay=0.0166):
         import RPi.GPIO as GPIO
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(pin, GPIO.IN)
@@ -14,6 +14,7 @@ class RotaryEncoder():
 
         # initialize the odometer values
         self.m_per_tick = mm_per_tick / 1000.0
+        self.poll_delay = poll_delay
         self.meters = 0
         self.last_time = time.time()
         self.meters_per_second = 0
@@ -55,6 +56,8 @@ class RotaryEncoder():
 
                 print('distance (m):', round(self.meters, 4))
                 print('velocity (m/s):', self.meters_per_second)
+
+            time.sleep(self.poll_delay)
 
     def run_threaded(self):
         return self.meters, self.meters_per_second
