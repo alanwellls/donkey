@@ -181,7 +181,27 @@ class Tub(object):
         import shutil
         shutil.rmtree(self.path)
 
+
+    def delete_last_n_records(self, n=200):
+        end_idx = self.get_last_ix()
+        start_idx = end_idx - n
+
+        print("Marking last 200 records for deletion")
+
+        for i in range(start_idx, end_idx):
+            json_path = self.path + "record_" + i + ".json"
+            img_path = self.path + i + "_cam-image_array_.jpg"
+
+            new_json_path = self.path + "deleted_record_" + i + ".json"
+            new_img_path = self.path + "deleted_" + i + "_cam-image_array_.jpg"
+
+            import shutil
+            shutil.move(json_path, new_json_path)
+            shutil.move(img_path, new_img_path)
+
+
     def shutdown(self):
+        self.delete_last_n_records()
         pass
 
 
@@ -274,6 +294,13 @@ class TubReader(Tub):
         record = [record[key] for key in args ]
         return record
 
+class TubRecordDeleter(Tub):
+    def __init__(self, path, *args, **kwargs):
+        super(TubRecordDeleter, self).__init__(*args, **kwargs)
+
+    def run(self, *args):
+        self.delete_last_n_records()
+        print("Deleting records")
 
 class TubHandler():
     def __init__(self, path):
