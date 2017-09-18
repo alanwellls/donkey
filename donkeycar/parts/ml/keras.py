@@ -28,7 +28,7 @@ class KerasPilot():
     
     
     def train(self, train_gen, val_gen, 
-              saved_model_path, epochs=100, steps=10, ):
+              saved_model_path, epochs=100, steps=100, ):
         
         """
         train_gen: generator that yields an array of images an array of 
@@ -45,7 +45,7 @@ class KerasPilot():
         #stop training if the validation error stops improving.
         early_stop = keras.callbacks.EarlyStopping(monitor='val_loss', 
                                                    min_delta=.0005, 
-                                                   patience=4, 
+                                                   patience=5, 
                                                    verbose=1, 
                                                    mode='auto')
         
@@ -80,9 +80,12 @@ class KerasCategorical(KerasPilot):
     
     
 class KerasLinear(KerasPilot):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, model=None, *args, **kwargs):
         super(KerasLinear, self).__init__(*args, **kwargs)
-        
+        if model:
+            self.model = model
+        else:
+            self.model = default_linear()
     def run(self, img_arr):
         img_arr = img_arr.reshape((1,) + img_arr.shape)
         angle, throttle = self.model.predict(img_arr)
@@ -124,8 +127,8 @@ def default_categorical():
     model.compile(optimizer='rmsprop',
                   loss={'angle_out': 'categorical_crossentropy', 
                         'throttle_out': 'mean_absolute_error'},
-                  loss_weights={'angle_out': 0.9, 'throttle_out': 0.1})
-
+                  loss_weights={'angle_out': 0.9, 'throttle_out': .001})
+    
     return model
 
 
@@ -161,7 +164,7 @@ def default_linear():
     model.compile(optimizer='rmsprop',
                   loss={'angle_out': 'mean_squared_error', 
                         'throttle_out': 'mean_squared_error'},
-                  loss_weights={'angle_out': 0.9, 'throttle_out': .1})
+                  loss_weights={'angle_out': 0.9, 'throttle_out': .001})
 
     return model
 
@@ -198,7 +201,7 @@ def default_relu():
     model.compile(optimizer='rmsprop',
                   loss={'angle_out': 'mean_squared_error', 
                         'throttle_out': 'mean_squared_error'},
-                  loss_weights={'angle_out': 0.9, 'throttle_out': .1})
+                  loss_weights={'angle_out': 0.9, 'throttle_out': .001})
 
     return model
 
