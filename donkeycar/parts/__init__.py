@@ -14,6 +14,7 @@ from .actuators.actuators import MockController
 
 from .controllers.web import LocalWebController
 from .controllers.joystick import JoystickPilot
+from .controllers.pid import PIDController
 
 from .sensors.cameras import PiCamera
 from .sensors.cameras import Webcam

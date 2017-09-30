@@ -213,6 +213,7 @@ class JoystickPilot():
         self.brake = False
         self.constant_throttle = False
         self.recording = False
+        self.constant_throttle = False
 
         #init joystick
         self.js = Joystick(dev_fn)
@@ -237,7 +238,7 @@ class JoystickPilot():
         * top = PS3 start => toggle constant throttle
         * base5 = PS3 left trigger 1 
         * base3 = PS3 left trigger 2
-        * base6 = PS3 right trigger 1 => decrease max throttle
+        * base6 = PS3 right trigger 1 
         * base4 = PS3 right trigger 2
         * thumb2 = PS3 right thumb
         * thumb = PS3 left thumb
@@ -267,6 +268,21 @@ class JoystickPilot():
                     self.throttle = (self.throttle_scale * axis_val * self.max_throttle)
                 print("throttle", self.throttle)
 
+            if button == 'trigger' and button_state == 1:
+                '''
+                switch modes from:
+                user: human controlled steer and throttle
+                local_angle: ai steering, human throttle
+                local: ai steering, ai throttle
+                '''
+                if self.mode == 'user':
+                    self.mode = 'local_angle'
+                elif self.mode == 'local_angle':
+                    self.mode = 'local'
+                else:
+                    self.mode = 'user'
+                print('new mode:', self.mode)
+            
             if button == 'trigger' and button_state == 1:
                 '''
                 switch modes from:
@@ -351,6 +367,7 @@ class JoystickPilot():
                 else:
                     self.constant_throttle = True
                     self.throttle = self.max_throttle
+
                 print('constant_throttle:', self.constant_throttle)
 
             if button == 'square' and button_state == 1:
@@ -362,7 +379,6 @@ class JoystickPilot():
                 else:
                     self.brake = True
                 print('brake:', self.brake)
-
 
             time.sleep(self.poll_delay)
 
