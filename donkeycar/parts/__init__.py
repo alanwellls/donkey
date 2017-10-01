@@ -9,7 +9,6 @@ from .actuators.actuators import Maestro
 from .actuators.actuators import Teensy
 from .actuators.actuators import PWMSteering
 from .actuators.actuators import PWMThrottle
-from .actuators.actuators import PIDController
 from .actuators.actuators import MockController
 
 from .controllers.web import LocalWebController
