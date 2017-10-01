@@ -15,7 +15,7 @@ from docopt import docopt
 import donkeycar as dk 
 
 
-def drive(model_path=None):
+def drive(cfg, model_path=None):
     #Initialized car
     V = dk.vehicle.Vehicle()
     cam = dk.parts.PiCamera(resolution=cfg.CAMERA_RESOLUTION)
@@ -175,7 +175,7 @@ def drive(model_path=None):
     
     #run the vehicle for 20 seconds
     V.start(rate_hz=cfg.DRIVE_LOOP_HZ, 
-            max_loop_count=None)
+            max_loop_count=cfg.MAX_LOOPS)
 
 
 
