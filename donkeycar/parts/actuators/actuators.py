@@ -311,6 +311,33 @@ class Teensy:
 
         return ret
 
+class LED:
+    ''' 
+    Used to control an LED (for example, to show recording status)
+    '''
+    def __init__(self, pin):
+        import RPi.GPIO as GPIO
+        GPIO.setmode(GPIO.BCM)
+
+        self.pin = pin
+        GPIO.setup(pin, GPIO.OUT)
+        GPIO.output(pin,GPIO.LOW)
+
+        import Adafruit_PCA9685
+        # Initialise the PCA9685 using the default address (0x40).
+        self.pwm = Adafruit_PCA9685.PCA9685()
+        self.pwm.set_pwm_freq(frequency)
+        self.channel = channel
+
+    def toggle(self, on):
+        if on:
+            GPIO.output(17,GPIO.HIGH)
+        else:
+            GPIO.output(17,GPIO.LOW)
+
+    def run(self, pulse):
+        self.set_pulse(pulse)
+
 class MockController(object):
     def __init__(self):
         pass
