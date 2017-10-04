@@ -187,7 +187,7 @@ class Joystick():
         return button, button_state, axis, axis_val
 
 
-class JoystickPilot():
+class JoystickController(object):
     '''
     Joystick client using access to local physical input
     '''
@@ -198,7 +198,8 @@ class JoystickPilot():
                  throttle_axis='rz',
                  steering_scale=1.0,
                  throttle_scale=-1.0,
-                 dev_fn='/dev/input/js0'):
+                 dev_fn='/dev/input/js0',
+                 auto_record_on_throttle=True):
 
         self.angle = 0.0
         self.throttle = 0.0
@@ -214,6 +215,7 @@ class JoystickPilot():
         self.constant_throttle = False
         self.recording = False
         self.constant_throttle = False
+        self.auto_record_on_throttle = auto_record_on_throttle
 
         #init joystick
         self.js = Joystick(dev_fn)
@@ -223,6 +225,13 @@ class JoystickPilot():
         self.thread = Thread(target=self.update)
         self.thread.setDaemon(True)
         self.thread.start()
+
+    def on_throttle_changes(self):
+        '''
+        turn on recording when non zero throttle in the user mode.
+        '''
+        if self.auto_record_on_throttle:
+            self.recording = (self.throttle != 0.0 and self.mode == 'user')
 
 
     def update(self):
@@ -282,6 +291,8 @@ class JoystickPilot():
                 else:
                     self.mode = 'user'
                 print('new mode:', self.mode)
+                self.on_throttle_changes()
+
             
             if button == 'trigger' and button_state == 1:
                 '''
@@ -302,7 +313,9 @@ class JoystickPilot():
                 '''
                 toggle recording on/off
                 '''
-                if self.recording:
+                if self.auto_record_on_throttle:
+                    print('auto record on throttle is enabled.')
+                elif self.recording:
                     self.recording = False
                 else:
                     self.recording = True
@@ -316,6 +329,7 @@ class JoystickPilot():
                 self.max_throttle = round(min(1.0, self.max_throttle + 0.05), 2)
                 if self.constant_throttle:
                     self.throttle = self.max_throttle
+                    self.on_throttle_changes()
 
                 print('max_throttle:', self.max_throttle)
 
@@ -326,6 +340,7 @@ class JoystickPilot():
                 self.max_throttle = round(max(0.0, self.max_throttle - 0.05), 2)
                 if self.constant_throttle:
                     self.throttle = self.max_throttle
+                    self.on_throttle_changes()
                     
                 print('max_throttle:', self.max_throttle)
 
@@ -364,9 +379,11 @@ class JoystickPilot():
                 if self.constant_throttle:
                     self.constant_throttle = False
                     self.throttle = 0
+                    self.on_throttle_changes()
                 else:
                     self.constant_throttle = True
                     self.throttle = self.max_throttle
+                    self.on_throttle_changes()
 
                 print('constant_throttle:', self.constant_throttle)
 
