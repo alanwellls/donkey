@@ -10,6 +10,7 @@ from .actuators.actuators import Teensy
 from .actuators.actuators import PWMSteering
 from .actuators.actuators import PWMThrottle
 from .actuators.actuators import MockController
+from .actuators.actuators import GPIOPinOutput
 
 from .controllers.web import LocalWebController
 from .controllers.joystick import JoystickController
