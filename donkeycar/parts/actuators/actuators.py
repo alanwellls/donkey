@@ -5,7 +5,6 @@ are wrapped in a mixer class before being used in the drive loop.
 """
 
 import time
-import pdb
 
 from ... import utils
 
@@ -312,6 +311,8 @@ class Teensy:
         return ret
 
 class GPIOPinOutput:
+    import RPi.GPIO as GPIO
+
     ''' 
     Toggle a GPIO pin on if condition is true, off if condition is false.
     Good for LED
@@ -319,7 +320,6 @@ class GPIOPinOutput:
     def __init__(self, pin):
         self.pin = pin
 
-        import RPi.GPIO as GPIO
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.pin, GPIO.OUT)
         GPIO.output(self.pin,GPIO.LOW)
@@ -334,7 +334,6 @@ class GPIOPinOutput:
         self.toggle(condition)
 
     def shutdown(self):
-        import RPi.GPIO as GPIO
         GPIO.cleanup() 
 
 
