@@ -311,13 +311,13 @@ class Teensy:
         return ret
 
 class GPIOPinOutput:
-    import RPi.GPIO as GPIO
 
     ''' 
     Toggle a GPIO pin on if condition is true, off if condition is false.
     Good for LED
     '''
     def __init__(self, pin):
+        import RPi.GPIO as GPIO
         self.pin = pin
 
         GPIO.setmode(GPIO.BCM)
@@ -325,6 +325,7 @@ class GPIOPinOutput:
         GPIO.output(self.pin,GPIO.LOW)
 
     def toggle(self, condition):
+        import RPi.GPIO as GPIO
         if condition:
             GPIO.output(self.pin,GPIO.HIGH)
         else:
@@ -334,6 +335,7 @@ class GPIOPinOutput:
         self.toggle(condition)
 
     def shutdown(self):
+        import RPi.GPIO as GPIO
         GPIO.cleanup() 
 
 
