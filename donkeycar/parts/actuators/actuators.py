@@ -314,10 +314,11 @@ class GPIOPinOutput:
     ''' 
     Toggle a GPIO pin based on a given condition
     High (on) if condition is true, low (off) if condition is false.
-    Good for LED indicators
+    Good for LEDs
     '''
     def __init__(self, pin):
-        self.gpio = import RPi.GPIO
+        import RPi.GPIO as GPIO
+        self.gpio = GPIO
         self.pin = pin
 
         self.gpio.setmode(GPIO.BCM)
