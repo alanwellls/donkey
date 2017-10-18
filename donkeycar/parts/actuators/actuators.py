@@ -321,15 +321,15 @@ class GPIOPinOutput:
         self.gpio = GPIO
         self.pin = pin
 
-        self.gpio.setmode(GPIO.BCM)
-        self.gpio.setup(self.pin, GPIO.OUT)
-        self.gpio.output(self.pin,GPIO.LOW)
+        self.gpio.setmode(self.gpio.BCM)
+        self.gpio.setup(self.pin, self.gpio.OUT)
+        self.gpio.output(self.pin, self.gpio.LOW)
 
     def toggle(self, condition):
         if condition:
-            self.gpio.output(self.pin,GPIO.HIGH)
+            self.gpio.output(self.pin, self.gpio.HIGH)
         else:
-            self.gpio.output(self.pin,GPIO.LOW)
+            self.gpio.output(self.pin, self.gpio.LOW)
 
     def run(self, condition):
         self.toggle(condition)
