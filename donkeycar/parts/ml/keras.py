@@ -87,7 +87,7 @@ class AlanCategorical(KerasPilot):
             self.model = alan_categorical()
         
     def run(self, img_arr):
-        img_arr = image[45:,:]
+        img_arr = img_arr[45:,:]
         img_arr = img_arr.reshape((1,) + img_arr.shape)
         angle_binned, throttle_binned = self.model.predict(img_arr)
 
