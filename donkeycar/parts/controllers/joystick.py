@@ -293,22 +293,6 @@ class JoystickController(object):
                 print('new mode:', self.mode)
                 self.on_throttle_changes()
 
-            
-            if button == 'trigger' and button_state == 1:
-                '''
-                switch modes from:
-                user: human controlled steer and throttle
-                local_angle: ai steering, human throttle
-                local: ai steering, ai throttle
-                '''
-                if self.mode == 'user':
-                    self.mode = 'local_angle'
-                elif self.mode == 'local_angle':
-                    self.mode = 'local'
-                else:
-                    self.mode = 'user'
-                print('new mode:', self.mode)
-
             if button == 'circle' and button_state == 1:
                 '''
                 toggle recording on/off
