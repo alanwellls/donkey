@@ -78,6 +78,7 @@ class KerasCategorical(KerasPilot):
         angle_unbinned = utils.linear_unbin(angle_binned)
         return angle_unbinned, throttle[0][0]
 
+
 class AlanCategorical(KerasPilot):
     def __init__(self, model=None, *args, **kwargs):
         super(AlanCategorical, self).__init__(*args, **kwargs)
@@ -98,18 +99,21 @@ class AlanCategorical(KerasPilot):
     
     
 class KerasLinear(KerasPilot):
-    def __init__(self, model=None, *args, **kwargs):
+    def __init__(self, model=None, num_outputs=None, *args, **kwargs):
         super(KerasLinear, self).__init__(*args, **kwargs)
         if model:
             self.model = model
+        elif num_outputs is not None:
+            self.model = default_n_linear(num_outputs)
         else:
             self.model = default_linear()
     def run(self, img_arr):
         img_arr = img_arr.reshape((1,) + img_arr.shape)
-        angle, throttle = self.model.predict(img_arr)
-        #angle_certainty = max(angle_binned[0])
-        return angle[0][0], throttle[0][0]
-
+        outputs = self.model.predict(img_arr)
+        #print(len(outputs), outputs)
+        steering = outputs[0]
+        throttle = outputs[1]
+        return steering[0][0], throttle[0][0]
 
 
 def default_categorical():
@@ -293,6 +297,42 @@ def alan_categorical():
     model.compile(optimizer='adam',
                   loss={'angle_out': 'categorical_crossentropy', 
                         'throttle_out': 'categorical_crossentropy'},
-                  loss_weights={'angle_out': 0.5, 'throttle_out': .5})
+                  loss_weights={'angle_out': 0.9, 'throttle_out': 0.001})
     
+    return model
+
+
+def default_n_linear(num_outputs):
+    from keras.layers import Input, Dense, merge
+    from keras.models import Model
+    from keras.layers import Convolution2D, MaxPooling2D, Reshape, BatchNormalization
+    from keras.layers import Activation, Dropout, Flatten, Cropping2D, Lambda
+    
+    img_in = Input(shape=(120,160,3), name='img_in')
+    x = img_in
+    x = Cropping2D(cropping=((60,0), (0,0)))(x) #trim 60 pixels off top
+    x = Lambda(lambda x: x/127.5 - 1.)(x) # normalize and re-center
+    x = Convolution2D(24, (5,5), strides=(2,2), activation='relu')(x)
+    x = Convolution2D(32, (5,5), strides=(2,2), activation='relu')(x)
+    x = Convolution2D(64, (5,5), strides=(1,1), activation='relu')(x)
+    x = Convolution2D(64, (3,3), strides=(1,1), activation='relu')(x)
+    x = Convolution2D(64, (3,3), strides=(1,1), activation='relu')(x)
+    
+    x = Flatten(name='flattened')(x)
+    x = Dense(100, activation='relu')(x)
+    x = Dropout(.1)(x)
+    x = Dense(50, activation='relu')(x)
+    x = Dropout(.1)(x)
+
+    outputs = [] 
+    
+    for i in range(num_outputs):
+        outputs.append(Dense(1, activation='linear', name='n_outputs' + str(i))(x))
+        
+    model = Model(inputs=[img_in], outputs=outputs)
+    
+    
+    model.compile(optimizer='adam',
+                  loss='mse')
+
     return model
