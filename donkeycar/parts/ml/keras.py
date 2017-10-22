@@ -29,7 +29,7 @@ class KerasPilot():
     
     
     def train(self, train_gen, val_gen, 
-              saved_model_path, epochs=100, steps=100, train_split=0.8):
+              saved_model_path, epochs=500, steps=100, train_split=0.8):
         
         """
         train_gen: generator that yields an array of images an array of 
@@ -112,6 +112,20 @@ class KerasLinear(KerasPilot):
         steering = outputs[0]
         throttle = outputs[1]
         return steering[0][0], throttle[0][0]
+
+class CommaLinear(KerasPilot):
+    def __init__(self, model=None, num_outputs=None, *args, **kwargs):
+        super(CommaLinear, self).__init__(*args, **kwargs)
+        if model:
+            self.model = model
+        else:
+            self.model = comma_linear()
+    def run(self, img_arr):
+        img_arr = img_arr.reshape((1,) + img_arr.shape)
+        output = self.model.predict(img_arr)
+        steering = output[0]
+        throttle = 0.5 #comma model is steering only. hardcode throttle
+        return steering, throttle
 
 
 def default_categorical():
@@ -332,5 +346,33 @@ def default_n_linear(num_outputs):
     
     model.compile(optimizer='adam',
                   loss='mse')
+
+    return model
+
+def comma_linear():
+    from keras.models import Sequential
+    from keras.layers import Dense, Dropout, Flatten, Lambda, ELU
+    from keras.layers.convolutional import Convolution2D
+
+    ch, row, col = 3, 120, 160  # camera format
+
+    model = Sequential()
+    model.add(Lambda(lambda x: x/127.5 - 1.,
+                input_shape=(row, col, ch),
+                output_shape=(row, col, ch)))
+    model.add(Convolution2D(16, (8, 8), strides=(4, 4), padding="same"))
+    model.add(ELU())
+    model.add(Convolution2D(32, (5, 5), strides=(2, 2), padding="same"))
+    model.add(ELU())
+    model.add(Convolution2D(64, (5, 5), strides=(2, 2), padding="same"))
+    model.add(Flatten())
+    model.add(Dropout(.2))
+    model.add(ELU())
+    model.add(Dense(512))
+    model.add(Dropout(.5))
+    model.add(ELU())
+    model.add(Dense(1))
+
+    model.compile(optimizer="adam", loss="mse")
 
     return model
