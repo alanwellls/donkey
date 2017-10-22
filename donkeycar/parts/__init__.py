@@ -28,7 +28,7 @@ from .sensors.teensy_rcin import TeensyRCin
 
 from .ml.keras import KerasCategorical
 from .ml.keras import KerasLinear
-from .ml.keras import AlanCategorical
+from .ml.keras import KerasCategoricalCropped
 
 from .stores.original import OriginalWriter
 
