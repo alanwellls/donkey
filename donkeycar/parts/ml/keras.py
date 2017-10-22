@@ -123,7 +123,7 @@ class CommaLinear(KerasPilot):
     def run(self, img_arr):
         img_arr = img_arr.reshape((1,) + img_arr.shape)
         output = self.model.predict(img_arr)
-        steering = output[0]
+        steering = output[0][0]
         throttle = 0.5 #comma model is steering only. hardcode throttle
         return steering, throttle
 
